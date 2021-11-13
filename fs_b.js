@@ -1508,7 +1508,6 @@
             }
         }
         $(".data-link,a[fs-href]").fs("links", 1);
-        fs.ad.apply();
         $("a[rel='tag']").attr("onclick", "fs.ajaxBrowseMe($(this).data('tag'),1);return !1").fs("NRC");
         $("a[rel='nofollow']").removeAttr("rel");
         $("a[fs-ttt='mobile']").attr("href", U.split("?")[0] + "?m=1");
