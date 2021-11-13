@@ -139,7 +139,7 @@
             n = c.data(),
             o = n.nobg,
             d = n.background,
-            e = "url(" + (d ? d : "//web.archive.org/web/20130606023920/http://3.bp.blogspot.com/-75yOt9t9yNE/TshWxrEKlKI/AAAAAAAABI4/Kpf84ktotGc/s800/wb_search_watermark.gif") + ")",
+            e = "url(" + (d ? d : "https://3.bp.blogspot.com/-75yOt9t9yNE/TshWxrEKlKI/AAAAAAAABI4/Kpf84ktotGc/s800/wb_search_watermark.gif") + ")",
             f = c.val(),
             h = function() {
                 if (f == "" && o == null) {
@@ -175,11 +175,11 @@
                 } else if (j == "video") {
                     m = _$S + "/p/video.html?ext=match&start-index=1&q=" + i
                 } else if (j == "google") {
-                    m = "https://web.archive.org/web/20130606023920/http://www.google.co.id/search?q=" + l + i
+                    m = "https://www.google.co.id/search?q=" + l + i
                 } else if (j == "yahoo") {
-                    m = "https://web.archive.org/web/20130606023920/http://search.yahoo.com/search?p=" + l + i
+                    m = "https://search.yahoo.com/search?p=" + l + i
                 } else if (j == "bing") {
-                    m = "https://web.archive.org/web/20130606023920/http://www.bing.com/search?q=" + l + i
+                    m = "https://www.bing.com/search?q=" + l + i
                 } else {
                     m = k + "?ext=" + j + "&q=" + i
                 }
@@ -431,7 +431,7 @@
                 }
                 s = x.createElement(y);
                 s.id = z;
-                s.src = "//web.archive.org/web/20130606023920/http://connect.facebook.net/id_ID/all.js#xfbml=1&appId=378838775523593";
+                s.src = "https://connect.facebook.net/id_ID/all.js#xfbml=1&appId=378838775523593";
                 j.parentNode.insertBefore(s, j)
             },
             comments: function() {
@@ -454,7 +454,7 @@
                     I = G(a),
                     j, J = function() {
                         var K = fs.POST_DATA.url;
-                        $.getJSON("https://web.archive.org/web/20130606023920/https://graph.facebook.com/", {
+                        $.getJSON("https://graph.facebook.com/", {
                             ids: K
                         }, function(l) {
                             var L = c + "-span-",
@@ -796,7 +796,7 @@
         window.FS = B
     })(jQuery);
     (function(A) {
-        var Z = "//web.archive.org/web/20130606023920/http://us.i1.yimg.com/us.yimg.com/i/mesg/emoticons7/",
+        var Z = "http://us.i1.yimg.com/us.yimg.com/i/mesg/emoticons7/",
             B = [
                 [":))", 21, "tertawa"],
                 [":\)\]", 100, "sedang menelepon"],
@@ -1072,7 +1072,7 @@
                     c = a.indexOf("src=\"", b),
                     d = a.indexOf("\"", c + 5),
                     e = a.substr(c + 5, d - c - 5);
-                return (b != -1 && c != -1 && d != -1 && e != "") ? e : "//web.archive.org/web/20130606023920/http://3.bp.blogspot.com/_ActSVcJ9YKs/TLkf8ea0JMI/AAAAAAAABTs/rIZyBtha7Rs/s100/NoThumb.gif"
+                return (b != -1 && c != -1 && d != -1 && e != "") ? e : "https://3.bp.blogspot.com/_ActSVcJ9YKs/TLkf8ea0JMI/AAAAAAAABTs/rIZyBtha7Rs/s100/NoThumb.gif"
             },
             R = function(a, b) {
                 return {
@@ -1219,7 +1219,7 @@
                     var a = I(e[i].title.$t),
                         p = L(e[i], 1),
                         x = K(e[i].published.$t);
-                    h += "<tr" + ((j == p.f) ? " class='select'" : "") + " valign='top'><td align='right'>" + (s + i) + ".</td><td><a" + _A + "<font style=font-size:12px><b><u>" + a + "</u></b></font><br><br><img src=" + N(p.g) + _K + ">" + J(I(O(p.g, c.s))) + _F + ")' href='" + p.f + "'>" + a + "</a>" + ((j == p.f) ? " <blink>&raquo;</blink> posting yang Anda buka saat ini" : "") + "</td>" + _M + ">" + ((parseInt(p.d) > 0) ? p.d : "-") + "</td>" + _M + "><span" + _A + p.c.join(", ") + "\")' style='cursor:help'><img src='//web.archive.org/web/20130606023920/http://4.bp.blogspot.com/-_PQIJ_qIjD0/TshHCghraRI/AAAAAAAABF8/jBnryR-rh-I/s12/i_search_lup.png' align='absmiddle'" + _H + "> Lihat</span></td>" + _M + ">" + x.d + " " + x.m + " " + x.y + "</td></tr>"
+                    h += "<tr" + ((j == p.f) ? " class='select'" : "") + " valign='top'><td align='right'>" + (s + i) + ".</td><td><a" + _A + "<font style=font-size:12px><b><u>" + a + "</u></b></font><br><br><img src=" + N(p.g) + _K + ">" + J(I(O(p.g, c.s))) + _F + ")' href='" + p.f + "'>" + a + "</a>" + ((j == p.f) ? " <blink>&raquo;</blink> posting yang Anda buka saat ini" : "") + "</td>" + _M + ">" + ((parseInt(p.d) > 0) ? p.d : "-") + "</td>" + _M + "><span" + _A + p.c.join(", ") + "\")' style='cursor:help'><img src='https://4.bp.blogspot.com/-_PQIJ_qIjD0/TshHCghraRI/AAAAAAAABF8/jBnryR-rh-I/s12/i_search_lup.png' align='absmiddle'" + _H + "> Lihat</span></td>" + _M + ">" + x.d + " " + x.m + " " + x.y + "</td></tr>"
                 }
                 h += "</table><div style=text-align:right><small><a href=/2010/12/cara-pasang-sitemap-blogspot-seperti.html class=fsnott>Pasang sitemap kek gini di blog kamu</a></small></div>";
                 f.html(h);
@@ -1408,10 +1408,10 @@
                         e = function(y) {
                             return I(J(y, 1)).replace(/fs-smiley/g, "fsnott")
                         },
-                        k = "//web.archive.org/web/20130606023920/http://img1.blogblog.com/img/",
+                        k = "http://img1.blogblog.com/img/",
                         v = g[i].author[0],
                         u = v.gd$image.src;
-                    s += "<li><a" + _A + "<b>" + I(r).toUpperCase() + "</b><br><br><table width=100% class=tbl0><tr><td><b><u>" + ((v.uri != null && v.uri.$t.indexOf("//web.archive.org/web/20130606023920/http://www.blogger.com/profile/04465718078323238972") != -1) ? "Admin" : I(g[i].author[0].name.$t)) + "</u></b> said:</td><td align=right><small><u>" + t.d + " " + t.m + " " + t.y + "</u></small>" + _J + " <img src=" + ((u.indexOf(k + "blank.gif") != -1) ? k + "anon36.png" : u.replace("/s220/", "/s32/")) + " height=32 align=left class=fs_avatar> " + I(J(x, 0)) + _F + ")' href='" + o + "'>";
+                    s += "<li><a" + _A + "<b>" + I(r).toUpperCase() + "</b><br><br><table width=100% class=tbl0><tr><td><b><u>" + ((v.uri != null && v.uri.$t.indexOf("https://www.blogger.com/profile/08121763620991506423") != -1) ? "Admin" : I(g[i].author[0].name.$t)) + "</u></b> said:</td><td align=right><small><u>" + t.d + " " + t.m + " " + t.y + "</u></small>" + _J + " <img src=" + ((u.indexOf(k + "blank.gif") != -1) ? k + "anon36.png" : u.replace("/s220/", "/s32/")) + " height=32 align=left class=fs_avatar> " + I(J(x, 0)) + _F + ")' href='" + o + "'>";
                     if (x.length < d.l) {
                         s += e(x)
                     } else {
