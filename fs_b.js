@@ -167,7 +167,7 @@
             var i = fs.$_encode(f),
                 j = b.find(".ext").val(),
                 k = _$S + "/p/search.html",
-                l = "site%3Awww.warungbebas.com+",
+                l = "site%3Aocimnet.blogspot.com+",
                 m;
             if (f != "") {
                 if (j == "topik") {
@@ -634,7 +634,7 @@
                     f.html("<img src='" + _$s + "/imagesarea/icon-n-bg/darkloading.gif'><br>PLEASE WAIT<br>Loading...")
                 } else {
                     f.html("Energy saving mode<br><span>Move your mouse to go back to the page.</span>");
-                    $("#" + a + "F").html("<span style='color:#666'>WarungBebas.Com</span> &copy; 2009 - " + _$year + ". Some rights reserved")
+                    $("#" + a + "F").html("<span style='color:#666'>ocimnet.blogspot.com</span> &copy; 2009 - " + _$year + ". Some rights reserved")
                 }
                 $("#" + a).show().css(q).animate({
                     width: "100%",
@@ -1006,7 +1006,7 @@
     })("reScroll", window);
     fs.utm = function(a, b) {
         b = $.extend({}, {
-            a: "warungbebas.com",
+            a: "ocimnet.blogspot.com",
             b: "banner",
             c: "logolink",
             d: "ads"
