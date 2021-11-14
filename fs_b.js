@@ -1316,9 +1316,8 @@
                 if (d.t) {
                     h = []
                 } else {
-                    h = "<table border='0' cellspacing='5' width='";
-                    h += d.w ? d.l.b : d.f.b;
-                    h += "' bgcolor='" + d.b + "'>"
+                    h = "<table border='0' cellspacing='5'"
+                    h += " bgcolor='" + d.b + "'>"
                 }
                 for (i = 0; i < o; i++) {
                     if (i == e.length) {
@@ -1728,12 +1727,12 @@
                 $("<div/>").css({
                     fontSize: "90%"
                 }).html($("<a/>").attr({
-                    href: "https://web.archive.org/web/20130606023920/http://www.thumbshots.com",
+                    href: "http://www.thumbshots.com",
                     target: "_blank"
                 }).html("Thumbnails site comenters by Thumbshots")).insertBefore("#backlinks-container")
             }
             setTimeout(function() {
-                P("//web.archive.org/web/20130606023920/http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4f8dbfa671d41a69", function() {
+                P("http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4f8dbfa671d41a69", function() {
                     var x = "#lintasme",
                         y = 550,
                         z = 600,
@@ -1747,7 +1746,7 @@
                         ],
                         d = O(c.length),
                         e = document.title,
-                        f = "https://web.archive.org/web/20130606023920/http://www.lintas.me/?c=bookmarklet&url=" + D(U) + "&title=" + D(e),
+                        f = "http://www.lintas.me/?c=bookmarklet&url=" + D(U) + "&title=" + D(e),
                         g = fs.$_win_c;
                     if ($(x).fs()) {
                         $(x).css("width", c[d][0]).show();
@@ -1822,7 +1821,7 @@
         });
         (function(h) {
             var x = "supercounters",
-                u = "https://web.archive.org/web/20130606023920/http://www." + x + ".com/fc.php?id=" + h + "&w=1&v=1",
+                u = "https://www." + x + ".com/fc.php?id=" + h + "&w=1&v=1",
                 d = document,
                 w = window,
                 y = screen,
