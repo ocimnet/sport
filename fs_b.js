@@ -1316,7 +1316,7 @@
                 if (d.t) {
                     h = []
                 } else {
-                    h = "<table border='0' cellspacing='5'"
+                    h = "<table border='0' cellspacing='5'";
                     h += " bgcolor='" + d.b + "'>"
                 }
                 for (i = 0; i < o; i++) {
