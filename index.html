@@ -1,169 +1,92 @@
-<!doctype html>
-<html lang="id">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Pencarian MP3 - Cepat & Elegan</title>
-  <meta name="description" content="Pencarian MP3 realtime tanpa database — pakai JavaScript & iTunes preview" />
-  <style>
-    :root{
-      --bg:#0f1724; --card:#0b1220; --muted:#94a3b8; --accent:#7c3aed; --glass: rgba(255,255,255,0.03);
-      --radius:14px; --gap:18px; font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;background:linear-gradient(180deg,#071029 0%,var(--bg) 100%);color:#e6eef8}
-    .wrap{max-width:1100px;margin:32px auto;padding:24px}
-    header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
-    h1{font-size:20px;margin:0}
-    p.lead{margin:0;color:var(--muted);font-size:13px}
-
-    .searchbar{display:flex;gap:10px;background:var(--glass);padding:10px;border-radius:12px;align-items:center;backdrop-filter:blur(6px);}
-    .searchbar input{flex:1;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;font-size:15px}
-    .searchbar button{padding:10px 16px;border-radius:10px;border:none;background:linear-gradient(90deg,var(--accent),#5b21b6);color:#fff;font-weight:600;cursor:pointer}
-    .searchbar .mini{font-size:12px;color:var(--muted)}
-
-    .meta{display:flex;gap:12px;align-items:center;margin-top:14px}
-    .meta .info{color:var(--muted);font-size:13px}
-
-    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:var(--gap);margin-top:22px}
-    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:12px;border-radius:var(--radius);border:1px solid rgba(255,255,255,0.03);display:flex;flex-direction:column;gap:10px}
-    .cover{width:100%;border-radius:10px;overflow:hidden;aspect-ratio:1/1;flex-shrink:0}
-    .title{font-size:15px;font-weight:600;margin:0}
-    .artist{font-size:13px;color:var(--muted);margin:0}
-    .controls{display:flex;gap:8px;align-items:center}
-    .controls audio{width:100%}
-    .btn{padding:8px 10px;border-radius:10px;border:none;background:transparent;color:#dbeafe;cursor:pointer;font-weight:600}
-    .download{background:rgba(255,255,255,0.04);padding:8px 10px;border-radius:10px;text-decoration:none;color:inherit}
-
-    .center{display:flex;align-items:center;justify-content:center}
-    .spinner{width:20px;height:20px;border-radius:50%;border:3px solid rgba(255,255,255,0.06);border-top-color:var(--accent);animation:spin 1s linear infinite}
-    @keyframes spin{to{transform:rotate(360deg)}}
-
-    footer{margin-top:28px;text-align:center;color:var(--muted);font-size:13px}
-
-    @media (max-width:520px){.wrap{padding:16px}.searchbar input{font-size:14px}}
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Soccerway Scraper Liga Indonesia</title>
+<style>
+body {
+margin: 0;
+font-family: Arial, sans-serif;
+background: #121212;
+color: #e0e0e0;
+}
+header {
+padding: 20px;
+background: #1e1e1e;
+box-shadow: 0 0 10px rgba(0,0,0,0.4);
+text-align: center;
+font-size: 24px;
+font-weight: bold;
+}
+.container {
+max-width: 900px;
+margin: 30px auto;
+padding: 20px;
+background: #1a1a1a;
+border-radius: 12px;
+box-shadow: 0 0 20px rgba(0,0,0,0.6);
+}
+.btn {
+padding: 10px 20px;
+background: #333;
+border: none;
+border-radius: 8px;
+color: #fff;
+cursor: pointer;
+transition: 0.3s;
+}
+.btn:hover {
+background: #444;
+}
+.match-card {
+background: #242424;
+padding: 15px;
+border-radius: 10px;
+margin: 15px 0;
+box-shadow: 0 0 10px rgba(0,0,0,0.4);
+}
+.teams {
+font-size: 18px;
+margin-bottom: 5px;
+font-weight: bold;
+}
+.time {
+font-size: 14px;
+color: #b0b0b0;
+}
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div>
-        <h1>Pencarian MP3</h1>
-        <p class="lead">Cari lagu, artis, atau band — tanpa database, realtime menggunakan preview iTunes.</p>
-      </div>
-      <div class="meta">
-        <div class="info">Cepat • Ringan • Tanpa login</div>
-      </div>
-    </header>
+<header>Soccerway Scraper Liga Indonesia</header>
 
-    <div class="searchbar" role="search">
-      <input id="q" type="search" placeholder="Cari lagu, artis atau band..." aria-label="Cari lagu" autocomplete="off" />
-      <button id="searchBtn">Cari</button>
-      <div class="mini" id="status"></div>
-    </div>
 
-    <main>
-      <div id="results" class="grid" aria-live="polite"></div>
-      <div id="empty" class="center" style="margin-top:22px;color:var(--muted)"></div>
-    </main>
+<div class="container">
+<button class="btn" onclick="loadData()">Muat Jadwal Liga 1</button>
 
-    <footer>Built with <strong>iTunes Search API</strong> — preview audio hanya untuk demo.</footer>
-  </div>
 
-  <script>
-    // Minimal, dependency-free, debounced search UI
-    const qInput = document.getElementById('q');
-    const searchBtn = document.getElementById('searchBtn');
-    const resultsEl = document.getElementById('results');
-    const emptyEl = document.getElementById('empty');
-    const statusEl = document.getElementById('status');
+<div id="result"></div>
+</div>
 
-    let controller = null; // for aborting fetch
 
-    function setStatus(text){ statusEl.textContent = text }
-    function clearStatus(){ statusEl.textContent = '' }
+<script>
+async function loadData() {
+const result = document.getElementById('result');
+result.innerHTML = 'Memuat data...';
 
-    async function search(term){
-      term = (term||'').trim();
-      resultsEl.innerHTML=''; emptyEl.textContent='';
-      if (!term) { emptyEl.textContent = 'Ketik sesuatu dan tekan Enter atau klik Cari.'; return }
 
-      setStatus('Mencari...');
-      if (controller) controller.abort();
-      controller = new AbortController();
+try {
+const res = await fetch('http://localhost:3000/scrape'); // Ganti sesuai backend
+const data = await res.json();
 
-      try{
-        const url = `https://itunes.apple.com/search?term=${encodeURIComponent(term)}&entity=song&limit=28`;
-        const res = await fetch(url, {signal: controller.signal});
-        if (!res.ok) throw new Error('Network error');
-        const data = await res.json();
-        const list = data.results || [];
-        if (!list.length) {
-          emptyEl.textContent = 'Tidak ada hasil.'; clearStatus(); return
-        }
-        render(list);
-      }catch(err){
-        if (err.name === 'AbortError') return;
-        console.error(err); emptyEl.textContent = 'Terjadi kesalahan mengambil data.';
-      }finally{ clearStatus(); controller = null }
-    }
 
-    function render(list){
-      resultsEl.innerHTML = '';
-      for (const s of list){
-        const card = document.createElement('article');
-        card.className = 'card';
+result.innerHTML = '';
 
-        const cover = document.createElement('div');
-        cover.className = 'cover';
-        const img = document.createElement('img');
-        img.loading = 'lazy';
-        img.src = s.artworkUrl100.replace('100x100bb','600x600bb');
-        img.alt = s.trackName + ' cover';
-        img.style.width='100%'; img.style.height='100%'; img.style.objectFit='cover';
-        cover.appendChild(img);
 
-        const title = document.createElement('h3'); title.className='title'; title.textContent = s.trackName;
-        const artist = document.createElement('p'); artist.className='artist'; artist.textContent = s.artistName + (s.collectionName ? ' — ' + s.collectionName : '');
-
-        const controls = document.createElement('div'); controls.className='controls';
-        const audio = document.createElement('audio'); audio.controls = true; audio.preload = 'none';
-        const src = document.createElement('source'); src.src = s.previewUrl; src.type = 'audio/mpeg'; audio.appendChild(src);
-
-        const dl = document.createElement('a'); dl.className='download'; dl.href = s.previewUrl; dl.target='_blank'; dl.rel='noopener noreferrer'; dl.download = sanitizeFileName(s.trackName + ' - ' + s.artistName + '.mp3');
-        dl.textContent = 'Download';
-
-        controls.appendChild(audio);
-
-        card.appendChild(cover);
-        card.appendChild(title);
-        card.appendChild(artist);
-        card.appendChild(controls);
-        card.appendChild(dl);
-
-        resultsEl.appendChild(card);
-      }
-    }
-
-    function sanitizeFileName(name){ return name.replace(/[\\/:*?"<>|]+/g, '_') }
-
-    // Debounce
-    function debounce(fn, wait=350){ let t; return (...a)=>{ clearTimeout(t); t = setTimeout(()=>fn.apply(this,a), wait) } }
-
-    const debouncedSearch = debounce((v)=>search(v), 350);
-
-    qInput.addEventListener('input', (e)=>{
-      const v = e.target.value;
-      if (!v.trim()) { resultsEl.innerHTML=''; emptyEl.textContent=''; clearStatus(); return }
-      setStatus('Mengetik...');
-      debouncedSearch(v);
-    });
-
-    qInput.addEventListener('keydown', (e)=>{ if (e.key === 'Enter') { e.preventDefault(); search(qInput.value); } });
-    searchBtn.addEventListener('click', ()=>search(qInput.value));
-
-    // Accessibility: focus search on load
-    window.addEventListener('load', ()=>{ qInput.focus(); });
-  </script>
-</body>
+data.matches.forEach(m => {
+const div = document.createElement('div');
+div.className = 'match-card';
+div.innerHTML = `
+<div class="teams">${m.home} vs ${m.away}</div>
+<div class="time">${m.time}</div>
 </html>
