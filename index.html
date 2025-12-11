@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Live Scores Scraper</title>
+<title>SofaScore Live Football Scraper</title>
 <style>
     body { font-family: Arial; background: #111; color: #eee; padding: 20px; }
     table { width: 100%; border-collapse: collapse; margin-top: 20px; }
@@ -13,8 +13,8 @@
 </head>
 <body>
 
-<h2>Live Scores Sepakbola (Scraping Tanpa API)</h2>
-<div id="status" class="loading">Mengambil data...</div>
+<h2>Live Scores SofaScore (Scraping Tanpa API)</h2>
+<div id="status" class="loading">Mengambil data dari SofaScore...</div>
 
 <table id="scoresTable" style="display:none;">
     <thead>
@@ -30,10 +30,10 @@
 
 <script>
 const CORS_PROXY = "https://api.allorigins.win/raw?url=";
-const TARGET_URL = "https://www.livescore.com/en/football/live/";
+const TARGET_URL = "https://www.sofascore.com/football/live";
 
 async function loadScores() {
-    document.getElementById("status").innerText = "Mengambil data...";
+    document.getElementById("status").innerText = "Mengambil data dari SofaScore...";
 
     try {
         const response = await fetch(CORS_PROXY + encodeURIComponent(TARGET_URL));
@@ -42,16 +42,18 @@ async function loadScores() {
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, "text/html");
 
-        let matches = doc.querySelectorAll("div.Kl1BU"); // selector live score
+        const matches = doc.querySelectorAll('[data-testid="event-row"]');
 
         const tbody = document.getElementById("scoresBody");
         tbody.innerHTML = "";
 
         matches.forEach(match => {
-            const time = match.querySelector(".uXC01")?.textContent.trim() || "-";
-            const home = match.querySelector(".FdJZw")?.textContent.trim() || "-";
-            const away = match.querySelector(".xrP4i")?.textContent.trim() || "-";
-            const score = match.querySelector(".qo8Vx")?.textContent.trim() || "-";
+            const time = match.querySelector('[data-testid="cell-event-status"]')?.textContent.trim() || "-";
+
+            const home = match.querySelector('[data-testid="cell-home"]')?.textContent.trim() || "-";
+            const away = match.querySelector('[data-testid="cell-away"]')?.textContent.trim() || "-";
+
+            const score = match.querySelector('[data-testid="cell-score"]')?.textContent.trim() || "-";
 
             let row = `
                 <tr>
@@ -61,24 +63,4 @@ async function loadScores() {
                     <td>${away}</td>
                 </tr>
             `;
-            tbody.innerHTML += row;
-        });
-
-        document.getElementById("scoresTable").style.display = "table";
-        document.getElementById("status").innerText = "Terakhir diperbarui: " + new Date().toLocaleTimeString();
-
-    } catch (err) {
-        document.getElementById("status").innerText = "Gagal memuat data.";
-        console.error(err);
-    }
-}
-
-// load pertama
-loadScores();
-
-// auto-refresh tiap 30 detik
-setInterval(loadScores, 30000);
-</script>
-
-</body>
-</html>
+            tbody.innerHTML
