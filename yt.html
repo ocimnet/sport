@@ -1,1 +1,272 @@
-tes
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Pencarian Video (Piped) — Tanpa API Key</title>
+<meta name="description" content="Pencarian video menggunakan Piped API — legal, tanpa API key, tanpa scraping." />
+<style>
+  :root{
+    --bg:#071026; --card:#0b1220; --muted:#9fb0c8; --accent:#7c3aed;
+    --radius:12px; --gap:14px; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;background:linear-gradient(180deg,#061026 0%,var(--bg) 100%);color:#eaf4ff}
+  .wrap{max-width:1100px;margin:28px auto;padding:20px}
+  header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  h1{margin:0;font-size:20px}
+  p.lead{margin:0;color:var(--muted);font-size:13px}
+
+  .searchbar{display:flex;gap:10px;margin-top:14px}
+  .searchbar input{flex:1;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:rgba(255,255,255,0.02);color:inherit;font-size:15px}
+  .searchbar button{padding:10px 14px;border-radius:10px;border:none;background:linear-gradient(90deg,var(--accent),#5b21b6);color:white;cursor:pointer;font-weight:600}
+  .small{font-size:12px;color:var(--muted)}
+
+  .settings{display:flex;gap:8px;align-items:center;margin-left:8px}
+  .select{background:transparent;border:1px solid rgba(255,255,255,0.04);color:inherit;padding:8px;border-radius:8px}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:var(--gap);margin-top:20px}
+  .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:12px;border-radius:var(--radius);border:1px solid rgba(255,255,255,0.03);display:flex;flex-direction:column;gap:8px}
+  .thumb{width:100%;aspect-ratio:16/9;border-radius:8px;overflow:hidden;flex-shrink:0;background:#000}
+  .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .title{font-size:15px;margin:0}
+  .channel{font-size:13px;color:var(--muted);margin:0}
+  .metaRow{display:flex;justify-content:space-between;gap:6px;align-items:center;font-size:13px;color:var(--muted)}
+
+  .controls{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-top:6px}
+  .btn{padding:8px 10px;border-radius:10px;border:none;background:transparent;color:#dbeafe;cursor:pointer;font-weight:600}
+  .open{background:rgba(255,255,255,0.03);padding:8px 10px;border-radius:10px;text-decoration:none;color:inherit}
+
+  .center{display:flex;align-items:center;justify-content:center}
+  .spinner{width:18px;height:18px;border-radius:50%;border:3px solid rgba(255,255,255,0.06);border-top-color:var(--accent);animation:spin 1s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  .footer{margin-top:24px;text-align:center;color:var(--muted);font-size:13px}
+
+  /* modal */
+  .modal{position:fixed;inset:0;background:rgba(1,6,15,0.75);display:flex;align-items:center;justify-content:center;padding:20px;z-index:999;opacity:0;pointer-events:none;transition:opacity .18s ease}
+  .modal.show{opacity:1;pointer-events:auto}
+  .player{width:100%;max-width:980px;background:var(--card);border-radius:12px;padding:12px}
+  .player iframe{width:100%;height:560px;border-radius:8px;border:0}
+  .player .meta{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:8px}
+  .closeBtn{background:transparent;border-radius:8px;padding:8px;border:none;color:var(--muted);cursor:pointer;font-weight:600}
+
+  @media (max-width:900px){
+    .player iframe{height:360px}
+    .grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+  }
+  @media (max-width:520px){
+    .searchbar{flex-direction:column;align-items:stretch}
+    .settings{justify-content:flex-start}
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Pencarian Video (Piped)</h1>
+        <p class="lead">Tanpa API key — memakai Piped instances yang legal. Ganti instance jika perlu.</p>
+      </div>
+
+      <div style="display:flex;align-items:center">
+        <div class="small" style="margin-right:10px">Instance</div>
+        <select id="instance" class="select" title="Pilih instance Piped">
+          <option value="https://piped.video">https://piped.video</option>
+          <option value="https://piped.kavin.rocks">https://piped.kavin.rocks</option>
+          <option value="https://piped.moomoo.me">https://piped.moomoo.me</option>
+        </select>
+      </div>
+    </header>
+
+    <div class="searchbar" role="search" style="margin-top:12px">
+      <input id="q" type="search" placeholder="Cari video, channel, atau topik..." aria-label="Cari video" autocomplete="off" />
+      <button id="searchBtn">Cari</button>
+      <div class="settings" style="margin-left:auto">
+        <label class="small" for="safe">Safe</label>
+        <select id="safe" class="select" title="Filter aman (opsional)">
+          <option value="">Semua</option>
+          <option value="true">Aman</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="status" class="small" style="margin-top:10px;color:var(--muted)"></div>
+
+    <main>
+      <div id="results" class="grid" aria-live="polite"></div>
+      <div id="empty" class="center" style="margin-top:18px;color:var(--muted)"></div>
+    </main>
+
+    <div class="footer">Built with <strong>Piped</strong> — public instances may rate-limit or go offline. Untuk produksi, jalankan instance sendiri.</div>
+  </div>
+
+  <!-- modal player -->
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="player" role="document">
+      <div style="display:flex;justify-content:flex-end">
+        <button class="closeBtn" id="closeModal">✕ Tutup</button>
+      </div>
+      <div id="playerArea" style="margin-top:6px"></div>
+    </div>
+  </div>
+
+<script>
+/*
+  HOW IT WORKS
+  - Uses the Piped instance's search API:
+    {instance}/api/v1/search?q=...
+  - No API key required.
+  - You may change the instance from the dropdown.
+  - Public instances may be unstable; for production run your own Piped.
+*/
+
+const qInput = document.getElementById('q');
+const searchBtn = document.getElementById('searchBtn');
+const resultsEl = document.getElementById('results');
+const emptyEl = document.getElementById('empty');
+const statusEl = document.getElementById('status');
+const instanceSelect = document.getElementById('instance');
+const safeSelect = document.getElementById('safe');
+
+const modal = document.getElementById('modal');
+const playerArea = document.getElementById('playerArea');
+const closeModal = document.getElementById('closeModal');
+
+let controller = null;
+
+// Utility
+function setStatus(t){ statusEl.textContent = t; }
+function clearStatus(){ statusEl.textContent = ''; }
+function debounce(fn, ms=300){ let t; return (...a)=>{ clearTimeout(t); t = setTimeout(()=>fn.apply(this,a), ms) } }
+function el(tag, cls){ const e = document.createElement(tag); if (cls) e.className = cls; return e; }
+function safeGet(obj, path, fallback=''){ try{ return path.split('.').reduce((o,k)=>o && o[k], obj) ?? fallback }catch(e){ return fallback } }
+
+// Search function
+async function search(query) {
+  query = (query||'').trim();
+  resultsEl.innerHTML = '';
+  emptyEl.textContent = '';
+  if (!query) { emptyEl.textContent = 'Ketik sesuatu lalu tekan Enter atau klik Cari.'; return; }
+
+  const instance = instanceSelect.value.replace(/\/+$/,'');
+  const safeOpt = safeSelect.value;
+  setStatus('Mencari pada ' + instance + ' ...');
+
+  if (controller) controller.abort();
+  controller = new AbortController();
+
+  try {
+    // Piped search endpoint (v1)
+    // example: https://piped.video/api/v1/search?q=queen
+    const params = new URLSearchParams({ q: query, p: '1' }); // p param may be supported by some instances
+    if (safeOpt) params.set('safe', safeOpt);
+
+    const url = `${instance}/api/v1/search?${params.toString()}`;
+    const res = await fetch(url, { signal: controller.signal });
+    if (!res.ok) {
+      throw new Error('HTTP ' + res.status);
+    }
+    const data = await res.json();
+
+    const items = Array.isArray(data) ? data : (data.videos || data.items || []);
+    if (!items || items.length === 0) {
+      emptyEl.textContent = 'Tidak ada hasil.';
+      return;
+    }
+    render(items);
+  } catch (err) {
+    if (err.name === 'AbortError') return;
+    console.error(err);
+    emptyEl.textContent = 'Terjadi kesalahan mengambil data dari instance. Coba ganti instance.';
+  } finally {
+    clearStatus();
+    controller = null;
+  }
+}
+
+// Render cards from Piped response (be defensive about fields)
+function render(items){
+  resultsEl.innerHTML = '';
+  for (const it of items){
+    // Piped video structure can vary between instances; handle common fields
+    const videoId = safeGet(it,'videoId') || safeGet(it,'videoId') || safeGet(it,'id') || safeGet(it,'videoId') || safeGet(it,'id.videoId') || '';
+    const title = safeGet(it,'title') || safeGet(it,'name') || '';
+    const author = safeGet(it,'author') || safeGet(it,'uploader') || safeGet(it,'channelTitle') || '';
+    const views = safeGet(it,'viewCount') || safeGet(it,'views') || '';
+    const published = safeGet(it,'publishedTimeText') || safeGet(it,'publishedText') || safeGet(it,'published') || '';
+    const thumb = (safeGet(it,'thumbnails') && it.thumbnails[0] && it.thumbnails[0].url) || safeGet(it,'thumbnail') || safeGet(it,'thumbnails.0.url') || '';
+
+    const card = el('article','card');
+
+    const thumbDiv = el('div','thumb');
+    if (thumb) {
+      const img = el('img'); img.loading = 'lazy'; img.src = thumb; img.alt = title;
+      thumbDiv.appendChild(img);
+    }
+    card.appendChild(thumbDiv);
+
+    const h = el('h3','title'); h.textContent = title;
+    const ch = el('p','channel'); ch.textContent = author || (views ? `${views} views` : '');
+    const metaRow = el('div','metaRow');
+    metaRow.textContent = (views ? `${views} • ` : '') + (published ? published : '');
+
+    const controls = el('div','controls');
+    const watchBtn = el('button','open'); watchBtn.textContent = 'Tonton';
+    const openYT = el('a','open'); openYT.textContent = 'Buka Piped'; openYT.target = '_blank'; openYT.rel = 'noopener noreferrer';
+
+    // Build links
+    // Prefer opening on the selected instance
+    const instance = instanceSelect.value.replace(/\/+$/,'');
+    const pipedWatch = videoId ? `${instance}/watch?v=${videoId}` : '#';
+    openYT.href = pipedWatch;
+
+    // Watch in modal (embed piped watch page)
+    watchBtn.addEventListener('click', ()=> openPlayer(pipedWatch, title));
+
+    controls.appendChild(watchBtn);
+    controls.appendChild(openYT);
+
+    card.appendChild(h);
+    card.appendChild(ch);
+    card.appendChild(metaRow);
+    card.appendChild(controls);
+
+    resultsEl.appendChild(card);
+  }
+}
+
+// Modal / player
+function openPlayer(url, title=''){
+  if (!url) return;
+  // Use iframe to load piped watch page (same origin allowed for embed in many instances)
+  playerArea.innerHTML = `<iframe src="${escapeHtml(url)}" title="${escapeHtml(title)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+  modal.classList.add('show');
+  modal.setAttribute('aria-hidden','false');
+  closeModal.focus();
+}
+function closePlayer(){
+  playerArea.innerHTML = '';
+  modal.classList.remove('show');
+  modal.setAttribute('aria-hidden','true');
+}
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, (m)=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[m]); }
+
+// Events
+const debounced = debounce((v)=> search(v), 300);
+qInput.addEventListener('input', (e)=> {
+  const v = e.target.value;
+  if (!v.trim()) { resultsEl.innerHTML=''; emptyEl.textContent=''; clearStatus(); return; }
+  setStatus('Mengetik...');
+  debounced(v);
+});
+qInput.addEventListener('keydown', (e)=> { if (e.key === 'Enter') { e.preventDefault(); search(qInput.value); } });
+searchBtn.addEventListener('click', ()=> search(qInput.value));
+closeModal.addEventListener('click', closePlayer);
+modal.addEventListener('click', (e)=> { if (e.target === modal) closePlayer(); });
+
+// focus
+window.addEventListener('load', ()=> qInput.focus());
+</script>
+</body>
+</html>
