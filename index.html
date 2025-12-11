@@ -1,103 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>Live Score & Jadwal SofaScore (Scraping)</title>
-
+<title>Live Score (ScoreBat Scraping)</title>
 <style>
-    body { font-family: Arial; background: #111; color: #eee; padding: 20px; }
-    h2 { margin-bottom: 20px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { padding: 10px; border: 1px solid #444; text-align: center; }
-    th { background: #222; }
-    button {
-        padding: 10px 20px;
-        border: none;
-        margin-right: 10px;
-        background: #333;
-        color: #fff;
-        cursor: pointer;
-    }
-    button.active {
-        background: #0a84ff;
-    }
-    .hidden { display: none; }
+body { font-family: Arial; background:#111; color:#eee; padding:20px; }
+table { width:100%; border-collapse:collapse; margin-top:15px; }
+th, td { border:1px solid #444; padding:10px; text-align:center; }
+th { background:#222; }
 </style>
-
 </head>
 <body>
 
-<h2>SofaScore: Live Scores & Jadwal Pertandingan<br><small>(Scraping Tanpa API)</small></h2>
+<h2>Live Score — ScoreBat (Scraping Langsung Tanpa API)</h2>
 
-<!-- TAB BUTTON -->
-<button id="btnLive" class="active">Live Scores</button>
-<button id="btnSchedule">Jadwal Pertandingan</button>
+<div id="status">Mengambil data...</div>
 
-<!-- ===== LIVE SCORES ===== -->
-<div id="liveSection">
-
-    <div id="liveStatus" class="loading">Mengambil live scores...</div>
-
-    <table id="liveTable" style="display:none;">
-        <thead>
-            <tr>
-                <th>Waktu</th>
-                <th>Home</th>
-                <th>Skor</th>
-                <th>Away</th>
-            </tr>
-        </thead>
-        <tbody id="liveBody"></tbody>
-    </table>
-</div>
-
-<!-- ===== SCHEDULE ===== -->
-<div id="scheduleSection" class="hidden">
-
-    <div id="scheduleStatus">Mengambil jadwal pertandingan...</div>
-
-    <table id="scheduleTable" style="display:none;">
-        <thead>
-            <tr>
-                <th>Tanggal/Waktu</th>
-                <th>Home</th>
-                <th>-</th>
-                <th>Away</th>
-            </tr>
-        </thead>
-        <tbody id="scheduleBody"></tbody>
-    </table>
-</div>
+<table id="table" style="display:none;">
+<thead>
+<tr>
+    <th>Waktu</th>
+    <th>Home</th>
+    <th>Skor</th>
+    <th>Away</th>
+</tr>
+</thead>
+<tbody id="body"></tbody>
+</table>
 
 <script>
-const CORS = "https://api.allorigins.win/raw?url=";
-
-// URL SofaScore
-const URL_LIVE     = "https://www.sofascore.com/football/live";
-const URL_SCHEDULE = "https://www.sofascore.com/football//schedule";
-
-/* ============================
-   LOAD LIVE SCORES
-============================ */
-async function loadLive() {
-    document.getElementById("liveStatus").innerText = "Mengambil live scores...";
+async function loadScores() {
+    document.getElementById("status").innerText = "Memuat...";
 
     try {
-        const response = await fetch(CORS + encodeURIComponent(URL_LIVE));
-        const html = await response.text();
+        const html = await fetch("https://www.scorebat.com/live-scores/").then(r => r.text());
+        const doc = new DOMParser().parseFromString(html, "text/html");
 
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, "text/html");
+        const matches = doc.querySelectorAll(".match-line");
 
-        const rows = doc.querySelectorAll('[data-testid="event-row"]');
-        const tbody = document.getElementById("liveBody");
+        const tbody = document.getElementById("body");
         tbody.innerHTML = "";
 
-        rows.forEach(match => {
-            const time  = match.querySelector('[data-testid="cell-event-status"]')?.textContent.trim() || "-";
-            const home  = match.querySelector('[data-testid="cell-home"]')?.textContent.trim() || "-";
-            const away  = match.querySelector('[data-testid="cell-away"]')?.textContent.trim() || "-";
-            const score = match.querySelector('[data-testid="cell-score"]')?.textContent.trim() || "-";
+        matches.forEach(m => {
+            const time  = m.querySelector(".date")?.textContent.trim() || "-";
+            const home  = m.querySelector(".home")?.textContent.trim() || "-";
+            const away  = m.querySelector(".away")?.textContent.trim() || "-";
+            const score = m.querySelector(".score")?.textContent.trim() || "-";
 
             tbody.innerHTML += `
                 <tr>
@@ -109,88 +57,17 @@ async function loadLive() {
             `;
         });
 
-        document.getElementById("liveTable").style.display = "table";
-        document.getElementById("liveStatus").innerText =
-            "Terakhir diperbarui: " + new Date().toLocaleTimeString();
+        document.getElementById("table").style.display = "table";
+        document.getElementById("status").innerText = "Update: " + new Date().toLocaleTimeString();
 
     } catch (e) {
-        document.getElementById("liveStatus").innerText =
-            "Gagal memuat live score.";
+        console.error(e);
+        document.getElementById("status").innerText = "Gagal mengambil data.";
     }
 }
 
-/* ============================
-   LOAD SCHEDULE
-============================ */
-async function loadSchedule() {
-    document.getElementById("scheduleStatus").innerText = "Mengambil jadwal pertandingan...";
-
-    try {
-        const response = await fetch(CORS + encodeURIComponent(URL_SCHEDULE));
-        const html = await response.text();
-
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, "text/html");
-
-        const rows = doc.querySelectorAll('[data-testid="event-row"]');
-        const tbody = document.getElementById("scheduleBody");
-        tbody.innerHTML = "";
-
-        rows.forEach(match => {
-            const time  = match.querySelector('[data-testid="cell-event-status"]')?.textContent.trim() || "-";
-            const home  = match.querySelector('[data-testid="cell-home"]')?.textContent.trim() || "-";
-            const away  = match.querySelector('[data-testid="cell-away"]')?.textContent.trim() || "-";
-
-            tbody.innerHTML += `
-                <tr>
-                    <td>${time}</td>
-                    <td>${home}</td>
-                    <td>vs</td>
-                    <td>${away}</td>
-                </tr>
-            `;
-        });
-
-        document.getElementById("scheduleTable").style.display = "table";
-        document.getElementById("scheduleStatus").innerText =
-            "Terakhir diperbarui: " + new Date().toLocaleTimeString();
-
-    } catch (e) {
-        document.getElementById("scheduleStatus").innerText =
-            "Gagal memuat jadwal pertandingan.";
-    }
-}
-
-/* ============================
-   TAB SWITCH (Live / Schedule)
-============================ */
-document.getElementById("btnLive").onclick = () => {
-    document.getElementById("btnLive").classList.add("active");
-    document.getElementById("btnSchedule").classList.remove("active");
-
-    document.getElementById("liveSection").classList.remove("hidden");
-    document.getElementById("scheduleSection").classList.add("hidden");
-};
-
-document.getElementById("btnSchedule").onclick = () => {
-    document.getElementById("btnSchedule").classList.add("active");
-    document.getElementById("btnLive").classList.remove("active");
-
-    document.getElementById("scheduleSection").classList.remove("hidden");
-    document.getElementById("liveSection").classList.add("hidden");
-};
-
-/* ============================
-   STARTUP + AUTO REFRESH
-============================ */
-loadLive();
-loadSchedule();
-
-// Live score refresh 30 detik
-setInterval(loadLive, 30000);
-
-// Jadwal refresh 5 menit
-setInterval(loadSchedule, 300000);
+loadScores();
+setInterval(loadScores, 30000); // auto-refresh
 </script>
 
 </body>
