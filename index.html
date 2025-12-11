@@ -1,92 +1,268 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="id">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Soccerway Scraper Liga Indonesia</title>
-<style>
-body {
-margin: 0;
-font-family: Arial, sans-serif;
-background: #121212;
-color: #e0e0e0;
-}
-header {
-padding: 20px;
-background: #1e1e1e;
-box-shadow: 0 0 10px rgba(0,0,0,0.4);
-text-align: center;
-font-size: 24px;
-font-weight: bold;
-}
-.container {
-max-width: 900px;
-margin: 30px auto;
-padding: 20px;
-background: #1a1a1a;
-border-radius: 12px;
-box-shadow: 0 0 20px rgba(0,0,0,0.6);
-}
-.btn {
-padding: 10px 20px;
-background: #333;
-border: none;
-border-radius: 8px;
-color: #fff;
-cursor: pointer;
-transition: 0.3s;
-}
-.btn:hover {
-background: #444;
-}
-.match-card {
-background: #242424;
-padding: 15px;
-border-radius: 10px;
-margin: 15px 0;
-box-shadow: 0 0 10px rgba(0,0,0,0.4);
-}
-.teams {
-font-size: 18px;
-margin-bottom: 5px;
-font-weight: bold;
-}
-.time {
-font-size: 14px;
-color: #b0b0b0;
-}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Scraper Jadwal Olahraga (Front-end)</title>
+  <style>
+    :root{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;}
+    body{margin:0;padding:24px;background:#f6f8fa;color:#111}
+    .card{background:#fff;padding:18px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06);max-width:980px;margin:12px auto}
+    h1{margin:0 0 10px;font-size:20px}
+    .row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+    label{display:block;font-size:13px;margin-bottom:6px}
+    select,input,textarea,button{font-size:14px;padding:8px;border:1px solid #ddd;border-radius:8px}
+    textarea{min-height:120px;width:100%;box-sizing:border-box}
+    table{width:100%;border-collapse:collapse;margin-top:12px}
+    th,td{padding:8px;border-bottom:1px solid #eee;text-align:left}
+    .small{font-size:13px;color:#666}
+    .actions{display:flex;gap:8px;flex-wrap:wrap}
+    .warning{background:#fff4e5;border-left:4px solid #ffb84d;padding:10px;border-radius:6px;margin-bottom:10px}
+    .success{background:#ecfdf5;border-left:4px solid #34d399;padding:10px;border-radius:6px;margin-bottom:10px}
+    @media (max-width:600px){.row{flex-direction:column}}
+  </style>
 </head>
 <body>
-<header>Soccerway Scraper Liga Indonesia</header>
+  <div class="card">
+    <h1>Scraper Jadwal Olahraga (Front-end saja)</h1>
+    <p class="small">Pilih mode: unggah HTML, tempel HTML, atau (opsional) ambil via CORS proxy. Sesuaikan <code>selector</code> agar cocok dengan struktur situs target.</p>
 
+    <div class="warning">
+      <strong>Peringatan:</strong> Pastikan mematuhi <em>robots.txt</em> dan Terms-of-Service situs target. Menggunakan proxy publik mungkin melanggar kebijakan atau berisiko keamanan.
+    </div>
 
-<div class="container">
-<button class="btn" onclick="loadData()">Muat Jadwal Liga 1</button>
+    <div class="row">
+      <div style="flex:1">
+        <label for="mode">Mode</label>
+        <select id="mode">
+          <option value="upload">Upload HTML</option>
+          <option value="paste">Paste HTML</option>
+          <option value="fetch">Fetch via CORS proxy (opsional)</option>
+        </select>
+      </div>
+      <div style="flex:1">
+        <label for="selector">Selector item event (CSS)</label>
+        <input id="selector" placeholder=".match or .event" value=".match">
+      </div>
+      <div style="flex:1">
+        <label for="timeSelector">Selector waktu (relative to item)</label>
+        <input id="timeSelector" placeholder=".time" value=".time">
+      </div>
+    </div>
 
+    <div id="uploadRow" class="row">
+      <div style="flex:1">
+        <label for="file">Pilih file HTML</label>
+        <input type="file" id="file" accept=".html,.htm">
+      </div>
+    </div>
 
-<div id="result"></div>
-</div>
+    <div id="pasteRow" style="display:none" class="row">
+      <div style="flex:1">
+        <label for="htmlPaste">Tempel HTML halaman di sini</label>
+        <textarea id="htmlPaste" placeholder="<html>..."></textarea>
+      </div>
+    </div>
 
+    <div id="fetchRow" style="display:none" class="row">
+      <div style="flex:1">
+        <label for="fetchUrl">URL halaman</label>
+        <input id="fetchUrl" placeholder="https://example.com/sports-schedule">
+      </div>
+      <div style="flex:1">
+        <label for="proxy">CORS proxy (optional)</label>
+        <input id="proxy" placeholder="https://cors-anywhere.herokuapp.com/ (tidak dianjurkan)">
+      </div>
+    </div>
 
-<script>
-async function loadData() {
-const result = document.getElementById('result');
-result.innerHTML = 'Memuat data...';
+    <div class="row">
+      <div style="flex:1">
+        <label for="teamSelector">Selector tim/deskripsi (opsional)</label>
+        <input id="teamSelector" placeholder=".teams" value=".teams">
+      </div>
+      <div style="flex:1">
+        <label for="venueSelector">Selector venue (opsional)</label>
+        <input id="venueSelector" placeholder=".venue" value=".venue">
+      </div>
+    </div>
 
+    <div class="row actions">
+      <button id="runBtn">Scrape sekarang</button>
+      <button id="exportCsv" disabled>Export CSV</button>
+      <button id="clearBtn">Clear hasil</button>
+    </div>
 
-try {
-const res = await fetch('http://localhost:3000/scrape'); // Ganti sesuai backend
-const data = await res.json();
+    <div id="status" class="small"></div>
 
+    <div id="result" style="margin-top:12px"></div>
+  </div>
 
-result.innerHTML = '';
+  <script>
+    // Utility: parse HTML string -> Document
+    function parseHTMLString(html) {
+      const parser = new DOMParser();
+      return parser.parseFromString(html, 'text/html');
+    }
 
+    // Utility: text safe trim
+    function textOf(el) { return el ? el.textContent.trim().replace(/\\s+/g,' ') : ''; }
 
-data.matches.forEach(m => {
-const div = document.createElement('div');
-div.className = 'match-card';
-div.innerHTML = `
-<div class="teams">${m.home} vs ${m.away}</div>
-<div class="time">${m.time}</div>
+    // UI elements
+    const modeEl = document.getElementById('mode');
+    const uploadRow = document.getElementById('uploadRow');
+    const pasteRow = document.getElementById('pasteRow');
+    const fetchRow = document.getElementById('fetchRow');
+    const fileInput = document.getElementById('file');
+    const htmlPaste = document.getElementById('htmlPaste');
+    const fetchUrl = document.getElementById('fetchUrl');
+    const proxyInput = document.getElementById('proxy');
+    const runBtn = document.getElementById('runBtn');
+    const selectorInput = document.getElementById('selector');
+    const timeSelectorInput = document.getElementById('timeSelector');
+    const teamSelectorInput = document.getElementById('teamSelector');
+    const venueSelectorInput = document.getElementById('venueSelector');
+    const resultDiv = document.getElementById('result');
+    const statusDiv = document.getElementById('status');
+    const exportBtn = document.getElementById('exportCsv');
+    const clearBtn = document.getElementById('clearBtn');
+
+    modeEl.addEventListener('change', () => {
+      const m = modeEl.value;
+      uploadRow.style.display = m === 'upload' ? 'flex' : 'none';
+      pasteRow.style.display = m === 'paste' ? 'block' : 'none';
+      fetchRow.style.display = m === 'fetch' ? 'flex' : 'none';
+    });
+
+    let lastData = [];
+
+    async function readUploadedFile() {
+      const f = fileInput.files && fileInput.files[0];
+      if (!f) throw new Error('Belum memilih file HTML.');
+      return await f.text();
+    }
+
+    async function fetchUrlHtml(url, proxy) {
+      // Jangan gunakan proxy publik tanpa izin.
+      let full = url;
+      if (proxy) {
+        // Hati-hati: menggunakan proxy publik bisa bermasalah.
+        full = proxy.replace(/\/$/, '') + '/' + url;
+      }
+      const resp = await fetch(full, { method: 'GET' });
+      if (!resp.ok) throw new Error('Fetch gagal: ' + resp.status + ' ' + resp.statusText);
+      return await resp.text();
+    }
+
+    function extractEvents(doc, itemSel, timeSel, teamSel, venueSel) {
+      const items = Array.from(doc.querySelectorAll(itemSel));
+      const events = items.map(item => {
+        const timeEl = timeSel ? item.querySelector(timeSel) || doc.querySelector(timeSel) : null;
+        const teamEl = teamSel ? item.querySelector(teamSel) : null;
+        const venueEl = venueSel ? item.querySelector(venueSel) : null;
+        const title = textOf(item);
+        return {
+          title: title,
+          time: textOf(timeEl),
+          teams: textOf(teamEl),
+          venue: textOf(venueEl)
+        };
+      });
+      return events;
+    }
+
+    function renderTable(data) {
+      if (!data.length) {
+        resultDiv.innerHTML = '<div class="small">Tidak ada event ditemukan dengan selector saat ini.</div>';
+        exportBtn.disabled = true;
+        return;
+      }
+      exportBtn.disabled = false;
+      const table = document.createElement('table');
+      const thead = document.createElement('thead');
+      thead.innerHTML = '<tr><th>#</th><th>Title</th><th>Time</th><th>Teams</th><th>Venue</th></tr>';
+      table.appendChild(thead);
+      const tbody = document.createElement('tbody');
+      data.forEach((d,i) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${i+1}</td><td>${escapeHtml(d.title)}</td><td>${escapeHtml(d.time)}</td><td>${escapeHtml(d.teams)}</td><td>${escapeHtml(d.venue)}</td>`;
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      resultDiv.innerHTML = '';
+      resultDiv.appendChild(table);
+    }
+
+    function escapeHtml(s) {
+      if (!s) return '';
+      return s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
+    }
+
+    function toCsv(data) {
+      const rows = [['Title','Time','Teams','Venue']];
+      data.forEach(d => rows.push([d.title,d.time,d.teams,d.venue]));
+      return rows.map(r => r.map(cell => `"${String(cell).replace(/"/g,'""')}"`).join(',')).join('\\n');
+    }
+
+    exportBtn.addEventListener('click', () => {
+      if (!lastData.length) return;
+      const csv = toCsv(lastData);
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'jadwal-scrape.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    clearBtn.addEventListener('click', () => {
+      resultDiv.innerHTML = '';
+      statusDiv.textContent = '';
+      lastData = [];
+      exportBtn.disabled = true;
+    });
+
+    runBtn.addEventListener('click', async () => {
+      statusDiv.textContent = '';
+      resultDiv.innerHTML = '';
+      exportBtn.disabled = true;
+      const mode = modeEl.value;
+      const itemSel = selectorInput.value.trim();
+      const timeSel = timeSelectorInput.value.trim();
+      const teamSel = teamSelectorInput.value.trim();
+      const venueSel = venueSelectorInput.value.trim();
+      if (!itemSel) { statusDiv.textContent = 'Isi selector item event terlebih dahulu.'; return; }
+
+      try {
+        statusDiv.textContent = 'Memproses...';
+        let html = '';
+        if (mode === 'upload') {
+          html = await readUploadedFile();
+        } else if (mode === 'paste') {
+          html = htmlPaste.value;
+          if (!html) throw new Error('Textarea kosong. Tempel HTML halaman yang ingin discape.');
+        } else if (mode === 'fetch') {
+          const url = fetchUrl.value.trim();
+          if (!url) throw new Error('Isi URL yang valid.');
+          const proxy = proxyInput.value.trim();
+          html = await fetchUrlHtml(url, proxy || '');
+        }
+
+        const doc = parseHTMLString(html);
+        // Extract events
+        const events = extractEvents(doc, itemSel, timeSel, teamSel, venueSel);
+
+        // Simple normalization: try deduplicate and filter empty titles
+        const filtered = events.filter(e => e.title && e.title.length > 0);
+        lastData = filtered;
+        renderTable(filtered);
+        statusDiv.textContent = `Selesai — ditemukan ${filtered.length} event (hasil dapat disesuaikan dengan selector).`;
+      } catch (err) {
+        statusDiv.textContent = 'Error: ' + err.message;
+        console.error(err);
+      }
+    });
+
+  </script>
+</body>
 </html>
