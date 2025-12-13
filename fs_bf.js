@@ -1,13 +1,5 @@
 var ___UN = undefined;
 var ___ = function(){};
-
-if (typeof fs === "undefined") {
-  window.fs = {};
-}
-
-fs.un = function (v) {
-  return typeof v === "undefined";
-};
 var _$_00 = " onmouseout='fs.tt.hide()' onmouseover='fs.tt.show(\"",
         _$_01 = "<a oncontextmenu='return !1' onclick='fs.ajaxBrowseMe(\"";
     $.support.cors = !0;
@@ -303,7 +295,7 @@ var _$_00 = " onmouseout='fs.tt.hide()' onmouseover='fs.tt.show(\"",
         },
         ajax: function(a, b, c) {
             return _$s + "/ajax_" + (c ? "php" : "data") + "/" + a + (c ? ".php" : (b ? "." + b : ".html"))
-        }
+        },
     };
     fs.navi = function(x, y, z, c) {
         c = $.extend({
@@ -732,11 +724,7 @@ var _$_00 = " onmouseout='fs.tt.hide()' onmouseover='fs.tt.show(\"",
                     } else {
                         d = c.data("tt");
                         if (typeof d == "string") {
-                            try {
-  d = JSON.parse(d);
-} catch(e) {
-  d = {};
-}
+                            d = eval("(" + d + ")")
                         }
                     }
                     if (d != null) {
@@ -754,11 +742,7 @@ var _$_00 = " onmouseout='fs.tt.hide()' onmouseover='fs.tt.show(\"",
                         d = c.data("links"),
                         a = c.attr("fs-href");
                     if (typeof d == "string") {
-                        try {
-  d = JSON.parse(d);
-} catch(e) {
-  d = {};
-}
+                        d = eval("(" + d + ")")
                     } else if (!fs.un(d) && a) {
                         d = {
                             href: fs.raw(a, 1),
@@ -797,7 +781,7 @@ var _$_00 = " onmouseout='fs.tt.hide()' onmouseover='fs.tt.show(\"",
                 })
             },
             scroll: function(a, b) {
-                return $("html, body").animate({
+                return $($.browser.webkit ? "body" : "html").animate({
                     scrollTop: this.offset().top - (a ? a : 10)
                 }, b ? b : 800)
             }
@@ -814,7 +798,7 @@ var _$_00 = " onmouseout='fs.tt.hide()' onmouseover='fs.tt.show(\"",
         window.FS = B
     })(jQuery);
     (function(A) {
-        var Z = "https://us.i1.yimg.com/us.yimg.com/i/mesg/emoticons7/",
+        var Z = "http://us.i1.yimg.com/us.yimg.com/i/mesg/emoticons7/",
             B = [
                 [":))", 21, "tertawa"],
                 [":\)\]", 100, "sedang menelepon"],
@@ -878,9 +862,7 @@ var _$_00 = " onmouseout='fs.tt.hide()' onmouseover='fs.tt.show(\"",
                 d = b.find(c + "0)"),
                 h = b.find(c + "1)");
             b.show().mouseover(D).mouseout(fs.tt.hide);
-            let opened = false;
-            b.on("click", function () {
-            if (!opened) {
+            b.toggle(function() {
                 if (!a.html().trim()) {
                     a.html(C())
                 }
@@ -889,15 +871,13 @@ var _$_00 = " onmouseout='fs.tt.hide()' onmouseover='fs.tt.show(\"",
                     h.hide()
                 });
                 b.unbind("mouseover")
-            } else {
+            }, function() {
                 a.fadeOut(function() {
                     d.hide();
                     h.show()
                 });
                 b.mouseover(D)
-            }
-            opened = !opened;
-            });
+            })
         };
         A.fs.$_YM = function(a, b) {
             var c = b ? "'" : "",
@@ -1353,7 +1333,7 @@ var _$_00 = " onmouseout='fs.tt.hide()' onmouseover='fs.tt.show(\"",
                     if (d.t) {
                         h[i] = _D + _O + ":0 5px' height='59' width='100%'><div id='tickerContent'><img" + _H + " align='left' src='" + y + "' border='0' width='30' height='30' style='border:1px solid #fff;margin:5px 10px 0 5px'> <a class='garis t" + i + "' href='" + u.f + "'" + _A + "<b>" + a + "</b><br><br><img src=" + y + _K + "> " + J(z) + _F + ",250)'>" + H(a, 50, 1) + "</a><br>" + J(H(z, 130, 1)) + "</div></td></tr" + _O + "-right:5px' height='15' align='right'" + _P + b.replace("{tNUM}", "t" + i) + " " + (i + 1) + "</span" + _P + u.d + " komentar</span> <a href='" + u.f + "' class='t" + i + "'" + _A + "readmore &raquo; &ldquo;" + a + "&rdquo;\")'>readmore <blink>&raquo;</blink></a>" + _J
                     } else {
-                        h += "<tr valign='top'><td class='img_ajax'><img src='" + y + "' width='" + (d.w ? d.l.w : d.f.w) + "' height='" + (d.w ? d.l.h : d.f.h) + "' border='0'" + _H + "></td><td" + _Q + "11px'><a " + ((l == u.f) ? "class='sirri' " : "") + "href='" + u.f + "'" + (d.w ? "" : _A + "<span style=font-size:12px><b><u>" + a + "</u></b></span><br><br><img src=" + y + _K + ">" + J(z) + _F + ",250)'") + "><b>" + a + "</b></a> " + (d.w ? "<div class='fdesc'>" + J(z) + " <a class='readmore' href='" + u.f + "'>baca selengkapnya &#8594;</a></div>" : "") + "<span" + _Q + "9px'>Dipublikasikan pada <span" + _N + ">" + x.d + " " + x.m + " " + x.y + "</span>, <a" + _N + " class='garis' href='" + u.f + "#comments'" + (d.w ? "" : _A + "Berikan komentar",250)'") + "></a> " + ((l == u.f) ? "<span style='color:#666'>(posting yang terbuka saat ini)</span>" : "") + "</span></td></tr>"
+                        h += "<tr valign='top'><td class='img_ajax'><img src='" + y + "' width='" + (d.w ? d.l.w : d.f.w) + "' height='" + (d.w ? d.l.h : d.f.h) + "' border='0'" + _H + "></td><td" + _Q + "11px'><a " + ((l == u.f) ? "class='sirri' " : "") + "href='" + u.f + "'" + (d.w ? "" : _A + "<span style=font-size:12px><b><u>" + a + "</u></b></span><br><br><img src=" + y + _K + ">" + J(z) + _F + ",250)'") + "><b>" + a + "</b></a> " + (d.w ? "<div class='fdesc'>" + J(z) + " <a class='readmore' href='" + u.f + "'>baca selengkapnya &#8594;</a></div>" : "") + "<span" + _Q + "9px'>Dipublikasikan pada <span" + _N + ">" + x.d + " " + x.m + " " + x.y + "</span>, <a" + _N + " class='garis' href='" + u.f + "#comments'" + (d.w ? "" : _A + "Berikan komentar ke: <b>" + a + "</b>, saat ini baru ada <b>" + u.d + "</b> komentar\",250)'") + "><font" + _N + ">Berikan komentar</font></a> " + ((l == u.f) ? "<span style='color:#666'>(posting yang terbuka saat ini)</span>" : "") + "</span></td></tr>"
                     }
                 }
                 if (d.t) {
@@ -1456,7 +1436,7 @@ var _$_00 = " onmouseout='fs.tt.hide()' onmouseover='fs.tt.show(\"",
         }
     })(window, "ajax", {}, "toc", "posts", "comments", "labels", JSON.stringify, fs.$_cutStr, fs.$_R, fs.$_YM, fs.$_NumF, fs.$_remTag, fs.isExtURL, setTimeout);
     function tx(s) {
-        document.body.insertAdjacentHTML("beforeend", s);
+        return document.write(s)
     }
     fs.$_long = fs.feng;
     fs.warungbebas = function(A, B) {
