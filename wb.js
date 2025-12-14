@@ -37,15 +37,16 @@
         }
     };
     var wb = {
-        s: _w_.u(_w_.s(1)) + _w_.u(_w_.s(0)) + _w_.u(_w_.s(3)) + _w_.f(_w_.l(9, 8, 8)) + _w_.f(_w_.l(5, 9, 3)) + _w_.f(_w_.l(5, 5, 1)) + _w_.f(_w_.l(5, 7, 8)) + _w_.f(46) + _w_.f(39) + _w_.f(32) + _w_.f(27) + _w_.f(_w_.l(5, 6, 0)) + _w_.f(27) + _w_.f(_w_.l(5, 4, 6)) + _w_.f(44) + _w_.u(_w_.s(4)),
-        $_sty_me: function(o) {
-            var s;
-            if (o == true) {
-                s = "display:none"
-            } else {
-                s = "font-size:36px;text-align:center;display:block;color:red;background:#000;padding:30px"
-            }
-            return s
+    s: _w_.u(_w_.s(2)) +          // https
+       _w_.u(_w_.s(0)) +          // ://
+       'ocimnet.blogspot.com',    // domain tujuan
+
+    $_sty_me: function(o) {
+        if (o === true) {
+            return "display:none";
+        } else {
+            return "font-size:36px;text-align:center;display:block;color:red;background:#000;padding:30px";
         }
-    };
+    }
+};
 }
