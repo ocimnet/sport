@@ -1417,7 +1417,7 @@
         return document.write(s)
     }
     fs.$_long = fs.feng;
-    fs.warungbebas = function(A, B) {
+    fs.ocim = function(A, B) {
         var C = fs.$_GET,
             D = fs.raw,
             E = "#fs_jlabel_p_w1",
