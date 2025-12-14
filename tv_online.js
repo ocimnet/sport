@@ -87,11 +87,11 @@ wb.tv = function(a) {
             s += l(i)
         }
     }
-    var t = '<small>Special thanks to <a href="' + _x_[0] + 'indoweb.tv" class="fsnott">indoweb.tv</a>';
+    //var t = '<small>Special thanks to <a href="' + _x_[0] + 'indoweb.tv" class="fsnott">indoweb.tv</a>';
     //if (fs.loc.split(".")[1] != b.split(".")[1]) {
         //t += '<a style="margin-left:50px" href="' + cr + '" title="Pasang TV player list seperti ini di blog Anda!"><img class="fsnott" src="http://1.bp.blogspot.com/-k-Ly3w0O64c/TuWQEGK1dHI/AAAAAAAABf4/iVuNHjIzpEY/s16/managewidgets.png" border="0" align="absmiddle" alt="add widget"></a>'
     //}
-    t += '</small><span style="display:none"><img src="' + _x_[0] + 'whos.amung.us/swidget/' + _x_[12] + '"></span>';
+    //t += '</small><span style="display:none"><img src="' + _x_[0] + 'whos.amung.us/swidget/' + _x_[12] + '"></span>';
     if (ckl === wb.s + "/") {
         wb.tvo(b + p[3] + p[0] + c_s + p[1] + x + p[2] + y, a[c_s][0]);
         fs.$('fsTVOnline').innerHTML = s;
