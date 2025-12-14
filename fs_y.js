@@ -1479,7 +1479,8 @@
         $("#top_link_navi_0").attr("href", U);
         $(".data-tt").fs("tt");
         if (U.split("?")[0] != _$S + "/p/sitemap.html") {
-            $("#fs_to_sitemap").fs("NRC").click(function() {
+            $("#fs_to_sitemap").fs("NRC");
+            $("#fs_to_sitemap").click(function() {
                 $(H).empty();
                 $(E).show();
                 $(G).fadeIn(function() {
